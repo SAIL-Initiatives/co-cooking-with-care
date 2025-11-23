@@ -1,3 +1,3 @@
 
-<video src="media/alifia-na.mp4" controls="controls" style="max-width: 730px;" ></video>
+<video src="media/alifia-na.mp4" controls="controls" style="max-width: 2800px;" ></video>
 
