@@ -6,7 +6,7 @@ relative_links:
 include:
   - README.md
   - LICENSE.md
-title: MOSAICC
+title: Co-Cooking with Care
 markdown: GFM
 show_downloads: false
 theme:  jekyll-theme-architect
