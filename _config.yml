@@ -1,0 +1,12 @@
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false
+include:
+  - README.md
+  - LICENSE.md
+title: MOSAICC
+markdown: GFM
+show_downloads: false
+theme:  jekyll-theme-architect
