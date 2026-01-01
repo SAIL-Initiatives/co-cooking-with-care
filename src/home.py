@@ -1,6 +1,11 @@
 import streamlit as st
 from supabase import create_client
 import os
+import numpy as np; 
+from datetime import datetime
+now = datetime.now()    
+
+st.write( now )
 
 # Supabase credentials
 SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"
