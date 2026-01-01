@@ -60,5 +60,13 @@ if posts:
         st.write(p["content"])
         st.markdown(f"**Likes:** {p['likes']}")
         st.markdown("---")
+
+        # Like button
+        if st.button(f"Like Post {p['id']}"):
+            # Increment likes by 1
+            supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("id", p["id"]).execute()
+            st.experimental_rerun()  # Refresh to show updated likes
+        st.markdown("---")
+ 
 else:
     st.info("No posts yet.")
