@@ -17,22 +17,53 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 st.title("Cherish Chef")
 
-# Input form
-with st.form("add_message"):
-    text = st.text_input("Posts")
-    submitted = st.form_submit_button("Add")
 
-    if submitted and text:
-        supabase.table("Posts").insert({"post": post}).execute()
-        st.success("Post added!")
+# --- Form to add a post ---
+st.subheader("Add a Post")
+with st.form("add_post"):
+    user_id_input = st.text_input(
+        "User ID (optional, leave blank for random UUID)"
+    )
+    post_text = st.text_area(
+        "Post JSON (e.g., {\"dish\": \"Musakhan\", \"story\": \"My grandma taught me\"})"
+    )
+    likes_input = st.number_input(
+        "Likes (optional, defaults to 0)", min_value=0, value=0
+    )
+
+    submitted = st.form_submit_button("Submit")
+
+    if submitted:
+        # Handle user_id
+        if user_id_input.strip() == "":
+            user_id_input = str(uuid.uuid4())  # generate random UUID
+        # Validate JSON
+        try:
+            post_json = json.loads(post_text) if post_text.strip() != "" else None
+            # Insert record
+            supabase.table("Posts").insert(
+                {
+                    "user_id": user_id_input,
+                    "post": post_json,
+                    "likes": likes_input,
+                }
+            ).execute()
+            st.success("Post added successfully!")
+        except json.JSONDecodeError:
+            st.error("Invalid JSON format. Please fix it.")
 
 st.divider()
 
-# Fetch records
-response = supabase.table("Posts").select("*").order(
-    "created_at", desc=True
-).execute()
+# --- Display posts ---
+st.subheader("Recent Posts")
+response = supabase.table("Posts").select("*").order("created_at", desc=True).execute()
+posts = response.data
 
-# Display records
-for post in response.data:
-    st.write(f"• { post['text']}")
+if posts:
+    for p in posts:
+        st.markdown(f"**ID:** {p['id']} | **Created:** {p['created_at']} | **User ID:** {p['user_id']}")
+        st.json(p["post"])
+        st.markdown(f"**Likes:** {p['likes']}")
+        st.markdown("---")
+else:
+    st.info("No posts yet.")
