@@ -10,7 +10,7 @@ SUPABASE_KEY = "sb_publishable_OQiidfTH2UMDKCwmDs6p7Q_Inzs0Z2D" # YOUR_ANON_KEY
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-st.title("CCC")
+st.title("Cherish Chef")
 
 # Input form
 with st.form("add_message"):
