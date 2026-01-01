@@ -19,20 +19,20 @@ st.title("Cherish Chef")
 
 # Input form
 with st.form("add_message"):
-    text = st.text_input("Message")
+    text = st.text_input("Posts")
     submitted = st.form_submit_button("Add")
 
     if submitted and text:
-        supabase.table("messages").insert({"text": text}).execute()
-        st.success("Message added!")
+        supabase.table("Posts").insert({"post": post}).execute()
+        st.success("Post added!")
 
 st.divider()
 
 # Fetch records
-response = supabase.table("messages").select("*").order(
+response = supabase.table("Posts").select("*").order(
     "created_at", desc=True
 ).execute()
 
 # Display records
-for msg in response.data:
-    st.write(f"• {msg['text']}")
+for post in response.data:
+    st.write(f"• { post['text']}")
