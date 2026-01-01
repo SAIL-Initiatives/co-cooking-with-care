@@ -3,6 +3,9 @@ from supabase import create_client
 import os
 import numpy as np; 
 from datetime import datetime
+
+import uuid
+
 now = datetime.now()    
 
 st.write( now )
