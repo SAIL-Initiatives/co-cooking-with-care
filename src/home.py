@@ -27,33 +27,25 @@ with st.form("add_post"):
     user_id_input = st.text_input(
         "User ID (optional, leave blank for random UUID)"
     )
-    post_text = st.text_area(
-        "Post JSON (e.g., {\"dish\": \"Musakhan\", \"story\": \"My grandma taught me\"})"
-    )
-    likes_input = st.number_input(
-        "Likes (optional, defaults to 0)", min_value=0, value=0
-    )
-
+    content = st.text_area("Tell us your story")
+    
     submitted = st.form_submit_button("Submit")
 
     if submitted:
         # Handle user_id
         if user_id_input.strip() == "":
             user_id_input = str(uuid.uuid4())  # generate random UUID
-        # Validate JSON
-        try:
-            post_json = json.loads(post_text) if post_text.strip() != "" else None
-            # Insert record
-            supabase.table("Posts").insert(
-                {
-                    "user_id": user_id_input,
-                    "post": post_json,
-                    "likes": likes_input,
-                }
-            ).execute()
-            st.success("Post added successfully!")
-        except json.JSONDecodeError:
-            st.error("Invalid JSON format. Please fix it.")
+          
+        # Insert record
+        supabase.table("Posts").insert(
+            {
+                "user_id": user_id_input,
+                "content": content,
+                "likes": 0,
+            }
+        ).execute()
+        st.success("Post added successfully!")
+
 
 st.divider()
 
@@ -65,7 +57,7 @@ posts = response.data
 if posts:
     for p in posts:
         st.markdown(f"**ID:** {p['id']} | **Created:** {p['created_at']} | **User ID:** {p['user_id']}")
-        st.json(p["post"])
+        st.write(p["content"])
         st.markdown(f"**Likes:** {p['likes']}")
         st.markdown("---")
 else:
