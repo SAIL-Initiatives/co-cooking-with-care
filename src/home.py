@@ -66,7 +66,7 @@ with tabs[1]:
             timestamp = p['created_at']
             dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
             timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
-            st.html( '<hr>'+ timestamp + '<hr>' )
+            st.html( f'<hr/>Last login at {timestamp} by {p['id']} <hr/>' )
             
 with tabs[0]:
     # --- Display posts ---
@@ -113,9 +113,7 @@ with tabs[0]:
         
         submitted = st.form_submit_button("Submit")
     
-        if submitted:
-            #if user_id_input.strip() == "":
-            
+        if submitted:            
             post_id = str(uuid.uuid4())  # generate random UUID
               
             # Insert record
@@ -132,8 +130,6 @@ with tabs[0]:
             st.rerun()
     
     
-    
-
 st.sidebar.header("Signup / Login")
 
 choice = st.sidebar.radio("Choose", ["Login", "Signup", "Logout"])
