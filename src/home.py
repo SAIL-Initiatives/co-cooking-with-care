@@ -130,7 +130,7 @@ with tabs[0]:
             timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
             #**ID:** {p['post_id']} 
             
-            st.markdown(f"**Created:** {timestamp} | **Author''s name:** {p['display_name']}")
+            st.markdown(f"**Created:** {timestamp} | **Author's name:** {p['display_name']}")
             st.html( '<hr>'+ p["content"] + '<hr>' )
             if p['sharable']: 
                 st.html("Shared with care. Please mention the author whenever you repost it." )
