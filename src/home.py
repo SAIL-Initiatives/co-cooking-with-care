@@ -21,8 +21,7 @@ st.title("Cherish Chef")
 # --- Form to add a post ---
 st.subheader("Add a Post")
 with st.form("add_post"):
-    user_id_input = ""
-    content = st.text_area("Tell us your story")
+    content = st.text_area("Please tell us your story")
 
     user_name = st.text_input(
         "Your name (optional)"
@@ -34,16 +33,17 @@ with st.form("add_post"):
     submitted = st.form_submit_button("Submit")
 
     if submitted:
-        # Handle user_id
-        if user_id_input.strip() == "":
-            user_id_input = str(uuid.uuid4())  # generate random UUID
+        #if user_id_input.strip() == "":
+        
+        post_id = str(uuid.uuid4())  # generate random UUID
           
         # Insert record
         supabase.table("Posts").insert(
             {
-                "user_id": user_id_input,
+                "post_id": post_id,
                 "content": content, 
                 "sharable": sharable,
+                "user_name": user_name,
                 "likes": 0,
             }
         ).execute()
@@ -59,14 +59,16 @@ posts = response.data
 
 if posts:
     for p in posts:
-        st.markdown(f"**ID:** {p['id']} | **Created:** {p['created_at']} | **User ID:** {p['user_id']}")
+        st.markdown(f"**ID:** {p['post_id']} | **Created:** {p['created_at']} | **User name:** {p['user_name']}")
         st.html( '<hr>'+ p["content"] + '<hr>' )
+        if p['sharable']: 
+            st.html("Shared with care. Please mention the author whenever you repost it." )
         st.markdown( f"**Likes:** {p['likes']}")
         
         # Like button
-        if st.button(f"Like Post {p['id']}"):
+        if st.button(f"Like Post {p['post_id']}"):
             # Increment likes by 1
-            supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("id", p["id"]).execute()
+            supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("post_id", p["post_id"]).execute()
             st.rerun()  # Refresh to show updated likes
         st.markdown("---")
  
