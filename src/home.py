@@ -12,7 +12,7 @@ st.write( now )
 
 # Supabase credentials
 SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"
-SUPABASE_KEY = os.enviro['SUPABASE_KEY']  # YOUR_ANON_KEY
+SUPABASE_KEY = os.environ['SUPABASE_KEY']  # YOUR_ANON_KEY
 SUPABASE_URL = "https://krpvkkctdsqrfwthvndz.supabase.co"
 
 
@@ -57,10 +57,9 @@ posts = response.data
 if posts:
     for p in posts:
         st.markdown(f"**ID:** {p['id']} | **Created:** {p['created_at']} | **User ID:** {p['user_id']}")
-        st.write(p["content"])
-        st.markdown(f"**Likes:** {p['likes']}")
-        st.markdown("---")
-
+        st.html( '<hr>'+ p["content"] + '<hr>' )
+        st.markdown( f"**Likes:** {p['likes']}")
+        
         # Like button
         if st.button(f"Like Post {p['id']}"):
             # Increment likes by 1
