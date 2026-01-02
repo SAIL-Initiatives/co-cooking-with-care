@@ -28,7 +28,7 @@ with st.form("add_post"):
     )
     
     sharable  = st.checkbox("If someone shares your story again, they must mention your name.")
-    st.markdown("We believe your story belongs to you. If others share it, they should be encouraged to mention you.<br />")
+    st.html("<p>We believe your story belongs to you. If others share it, they should be encouraged to mention you.</p>")
     
     submitted = st.form_submit_button("Submit")
 
