@@ -106,7 +106,7 @@ if choice == "Signup":
         if user:
             # Insert into Users table (UUID-based RLS)
             supabase.table("Users").insert({
-                "id": user['id'],
+                "id": user.id,
                 "email": email,
                 "display_name": display_name
             }).execute()
