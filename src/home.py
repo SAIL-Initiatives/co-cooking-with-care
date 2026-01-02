@@ -24,46 +24,40 @@ if "user" not in st.session_state:
 
 tabs= st.tabs(['Share', 'Events'] )
 
-with tabs[1]:    
-    # -----------------------
-    # SIGNUP
-    # -----------------------
-    login_tabs = st.tabs(["Sign Up", "Log in", "Log out"])
-    with login_tabs[0]:
-        email = st.sidebar.text_input("Email")
-        password = st.sidebar.text_input("Password", type="password")
-        display_name = st.sidebar.text_input("Display Name")
-        if st.sidebar.button("Signup"):
-            response = supabase.auth.sign_up({"email": email, "password": password})
-            user = response.user
-            if user:
-                # Insert into Users table (UUID-based RLS)
-                supabase.table("Users").insert({
-                    "id": user['id'],
-                    "email": email,
-                    "display_name": display_name
-                }).execute()
-                st.success("Signup successful! Please log in.")
-                
-    with login_tabs[1]:
-        email = st.sidebar.text_input("Email")
-        password = st.sidebar.text_input("Password", type="password")
-        if st.sidebar.button("Login"):
-            response = supabase.auth.sign_in_with_password({"email": email, "password": password})
-            user = response.user
-            if user:
-                st.session_state.user = user
-                st.success(f"Logged in as {user['email']}")
-            else:
-                st.error("Login failed")
-    
-    with login_tabs[2]:
-        if st.sidebar.button("Logout"):
-            supabase.auth.sign_out()
-            st.session_state.user = None
-            st.success("Logged out!")      
+
+
 
 with tabs[0]:
+    # --- Display posts ---
+    response = supabase.table("Posts").select("*").order("created_at", desc=True).execute()
+    posts = response.data
+    
+    if posts:
+        st.subheader("Recent Posts")
+        for p in posts:
+            timestamp = p['created_at']
+            dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
+    
+            timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
+            #**ID:** {p['post_id']} 
+            
+            st.markdown(f"**Created:** {timestamp} | **Author's name:** {p['display_name']}")
+            st.html( '<hr>'+ p["content"] + '<hr>' )
+            if p['sharable']: 
+                st.html("Shared with care. Please mention the author whenever you repost it." )
+            n=p['likes']
+            st.markdown( f"**{n} Likes**")
+            
+            # Like button
+            if st.button( "Like Post", key=p['post_id']+'_like_button' ):
+                # Increment likes by 1
+                supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("post_id", p["post_id"]).execute()
+                st.rerun()  # Refresh to show updated likes
+            st.markdown("---")
+    else:
+        st.info("No posts yet.")
+    
+    st.divider()
     st.subheader("Add a Post")
     with st.form("add_post"):
         content = st.text_area("Please tell us your story")
@@ -96,34 +90,42 @@ with tabs[0]:
             st.success("Post added successfully!")
     
     
-    st.divider()
     
-    # --- Display posts ---
-    st.subheader("Recent Posts")
-    response = supabase.table("Posts").select("*").order("created_at", desc=True).execute()
-    posts = response.data
-    
-    if posts:
-        for p in posts:
-            timestamp = p['created_at']
-            dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
-    
-            timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
-            #**ID:** {p['post_id']} 
+
+st.sidebar.header("Signup / Login")
+
+choice = st.sidebar.radio("Choose", ["Login", "Signup", "Logout"])
+
+if choice == "Signup":
+    email = st.sidebar.text_input("Email")
+    password = st.sidebar.text_input("Password", type="password")
+    display_name = st.sidebar.text_input("Display Name")
+    if st.sidebar.button("Signup"):
+        response = supabase.auth.sign_up({"email": email, "password": password})
+        user = response.user
+        if user:
+            # Insert into Users table (UUID-based RLS)
+            supabase.table("Users").insert({
+                "id": user['id'],
+                "email": email,
+                "display_name": display_name
+            }).execute()
+            st.success("Signup successful! Please log in.")
             
-            st.markdown(f"**Created:** {timestamp} | **Author's name:** {p['display_name']}")
-            st.html( '<hr>'+ p["content"] + '<hr>' )
-            if p['sharable']: 
-                st.html("Shared with care. Please mention the author whenever you repost it." )
-            n=p['likes']
-            st.markdown( f"**{n} Likes**")
-            
-            # Like button
-            if st.button( "Like Post", key=p['post_id']+'_like_button' ):
-                # Increment likes by 1
-                supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("post_id", p["post_id"]).execute()
-                st.rerun()  # Refresh to show updated likes
-            st.markdown("---")
-     
-    else:
-        st.info("No posts yet.")
+elif choice == "Login":
+    email = st.sidebar.text_input("Email")
+    password = st.sidebar.text_input("Password", type="password")
+    if st.sidebar.button("Login"):
+        response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+        user = response.user
+        if user:
+            st.session_state.user = user
+            st.success(f"Logged in as {user['email']}")
+        else:
+            st.error("Login failed")
+
+elif choice == "Logout":
+    if st.sidebar.button("Logout"):
+        supabase.auth.sign_out()
+        st.session_state.user = None
+        st.success("Logged out!")
