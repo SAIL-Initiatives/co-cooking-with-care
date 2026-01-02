@@ -115,6 +115,7 @@ if choice == "Signup":
     if st.sidebar.button("Signup"):
         response = supabase.auth.sign_up({"email": email, "password": password})
         user = response.user
+        st.text( user ) 
         if user.id:
             st.write( uid:= user.id)
         else:
