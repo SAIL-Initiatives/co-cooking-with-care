@@ -22,7 +22,7 @@ st.title("Cherish Chef")
 if "user" not in st.session_state:
     st.session_state.user = None
 
-tabs= st.tabs('Share', 'Events' )
+tabs= st.tabs(['Share', 'Events'] )
 
 with tabs[1]:    
     # -----------------------
