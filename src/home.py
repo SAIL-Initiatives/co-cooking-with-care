@@ -8,7 +8,6 @@ import uuid, json
 
 now = datetime.now()    
 
-st.write( now )
 
 # Supabase credentials
 # SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"
@@ -22,7 +21,7 @@ st.title("Cherish Chef")
 if "user" not in st.session_state:
     st.session_state.user = None
 
-tabs= st.tabs(['Share', 'Users'] )
+tabs= st.tabs(['Share', 'Signup', 'System history' ] )
 
 if 0:
     '''
@@ -55,19 +54,6 @@ if 0:
     44da6b55-f712-4cd1-8d18-b49beeb0457b
     '''
 
-
-with tabs[1]:
-    # --- Display users ---
-    response = supabase.table("userprofiles").select("*").order("created_at", desc=True).execute()
-    users = response.data
-    
-    if users:
-        for p in users:
-            timestamp = p['created_at']
-            dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
-            timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
-            st.html( f'<hr/>Last login at {timestamp} by {p['id']} <hr/>' )
-            
 with tabs[0]:
     # --- Display posts ---
     response = supabase.table("posts").select("*").order("created_at", desc=True).execute()
@@ -130,43 +116,61 @@ with tabs[0]:
             st.rerun()
     
     
-st.sidebar.header("Signup / Login")
+with tabs[1]: #st.sidebar.header("Signup / Login")
 
-choice = st.sidebar.radio("Choose", ["Login", "Signup", "Logout"])
-
-if choice == "Signup":
-    email = st.sidebar.text_input("Email")
-    password = st.sidebar.text_input("Password", type="password")
-    display_name = st.sidebar.text_input("Display Name")
-    if st.sidebar.button("Signup"):
-        response = supabase.auth.sign_up({"email": email, "password": password})
-        user = response.user
-        st.text( f'User ID: {user.id}' ) 
-        
-        if user:
-            # Insert into Users table (UUID-based RLS)
-            supabase.table("userprofiles").insert({
-                "id": user.id,
-                "email": email,
-                "display_name": display_name
-            }).execute()
-            st.success("Signup successful! Please log in.")
+    choice = st.radio("Choose", ["Login", "Signup", "Logout"])
+    
+    if choice == "Signup":
+        email = st.text_input("Email")
+        password = st.text_input("Password", type="password")
+        display_name = st.text_input("Display Name")
+        if st.sidebar.button("Signup"):
+            response = supabase.auth.sign_up({"email": email, "password": password})
+            user = response.user
+            st.text( f'User ID: {user.id}' ) 
             
-elif choice == "Login":
-    email = st.sidebar.text_input("Email")
-    password = st.sidebar.text_input("Password", type="password")
-    if st.sidebar.button("Login"):
-        response = supabase.auth.sign_in_with_password({"email": email, "password": password})
-        user = response.user
-        if user:
-            st.session_state.user = user
-            st.write(f"Logged in as {user.email}")
-            st.success(f"Logged in as {user.email}")
-        else:
-            st.error("Login failed")
+            if user:
+                # Insert into Users table (UUID-based RLS)
+                supabase.table("userprofiles").insert({
+                    "id": user.id,
+                    "email": email,
+                    "display_name": display_name
+                }).execute()
+                st.success("Signup successful! Please log in.")
+                
+    elif choice == "Login":
+        email = st.text_input("Email")
+        password = st.text_input("Password", type="password")
+        if st.sidebar.button("Login"):
+            response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+            user = response.user
+            if user:
+                st.session_state.user = user
+                st.write(f"Logged in as {user.email}")
+                st.success(f"Logged in as {user.email}")
+            else:
+                st.error("Login failed")
+    
+    elif choice == "Logout":
+        if st.button("Logout"):
+            supabase.auth.sign_out()
+            st.session_state.user = None
+            st.success("Logged out!")
 
-elif choice == "Logout":
-    if st.sidebar.button("Logout"):
-        supabase.auth.sign_out()
-        st.session_state.user = None
-        st.success("Logged out!")
+
+
+with tabs[2]:
+    # --- Display users ---
+    response = supabase.table("userprofiles").select("*").order("created_at", desc=True).execute()
+    users = response.data
+    
+    if users:
+        for p in users:
+            timestamp = p['created_at']
+            dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
+            timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
+            st.html( f'<hr/>Last login at {timestamp} by {p['id']} <hr/>' )
+            
+st.html('<hr/>')
+st.write( f'System's time: {now}' )
+st.write( 'URL: https://sail-initiatives-mvp.share.connect.posit.cloud' )
