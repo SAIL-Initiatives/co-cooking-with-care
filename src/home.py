@@ -91,7 +91,7 @@ with tabs[0]:
             "Your display name"
         )
         
-        sharable  = st.checkbox("If someone shares your story again, they must mention your name.")
+        sharable  = int8( st.checkbox("If someone shares your story again, they must mention your name."))
         st.html("<p>We believe your story belongs to you. If others share it, they should be encouraged to mention you.</p>")
         
         submitted = st.form_submit_button("Submit")
