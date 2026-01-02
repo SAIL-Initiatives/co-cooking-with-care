@@ -73,7 +73,7 @@ if posts:
         st.markdown( f"**{n} Likes**")
         
         # Like button
-        if st.button( "Like Post"):
+        if st.button( "Like Post", key=p['post_id']+'_like_button' ):
             # Increment likes by 1
             supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("post_id", p["post_id"]).execute()
             st.rerun()  # Refresh to show updated likes
