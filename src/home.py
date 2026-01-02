@@ -44,8 +44,8 @@ with tabs[1]:
                 st.success("Signup successful! Check your email to confirm.")
     
                 # 2️⃣ Insert into User table
-                supabase.table("User").insert({
-                    "id": user['id'],           # same UUID as auth
+                supabase.table("Users").insert({
+                    "user_id":  str(uuid.uuid4()),           # same UUID as auth
                     "email": email,
                     "display_name": display_name
                 }).execute()
