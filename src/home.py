@@ -22,11 +22,22 @@ st.title("Cherish Chef")
 if "user" not in st.session_state:
     st.session_state.user = None
 
-tabs= st.tabs(['Share', 'Events'] )
+tabs= st.tabs(['Share', 'Users'] )
 
 
 
-
+with tabs[1]:
+    # --- Display users ---
+    response = supabase.table("Users").select("*").order("created_at", desc=True).execute()
+    users = response.data
+    
+    if users:
+        for p in users:
+            timestamp = p['created_at']
+            dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
+            timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
+            st.html( '<hr>'+ timestamp + '<hr>' )
+            
 with tabs[0]:
     # --- Display posts ---
     response = supabase.table("Posts").select("*").order("created_at", desc=True).execute()
