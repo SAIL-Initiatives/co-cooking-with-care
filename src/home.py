@@ -57,7 +57,7 @@ with tabs[1]:
             else:
                 st.error("Login failed")
     
-    with login_tabs[2]::
+    with login_tabs[2]:
         if st.sidebar.button("Logout"):
             supabase.auth.sign_out()
             st.session_state.user = None
