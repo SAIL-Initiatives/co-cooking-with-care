@@ -151,6 +151,7 @@ if choice == "Signup":
             # Insert into Users table (UUID-based RLS)
             supabase.table("userprofiles").insert({
                 "id": user.id,
+                "email": email.id,
                 "display_name": display_name
             }).execute()
             st.success("Signup successful! Please log in.")
