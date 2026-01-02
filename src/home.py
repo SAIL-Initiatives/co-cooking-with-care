@@ -59,14 +59,21 @@ posts = response.data
 
 if posts:
     for p in posts:
-        st.markdown(f"**ID:** {p['post_id']} | **Created:** {p['created_at']} | **User name:** {p['user_name']}")
+        timestamp = p['created_at']
+        dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
+
+        timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
+        #**ID:** {p['post_id']} 
+        
+        st.markdown(f"**Created:** {timestamp} | **User name:** {p['user_name']}")
         st.html( '<hr>'+ p["content"] + '<hr>' )
         if p['sharable']: 
             st.html("Shared with care. Please mention the author whenever you repost it." )
-        st.markdown( f"**Likes:** {p['likes']}")
+        n=p['likes']
+        st.markdown( f"**{n} Likes**")
         
         # Like button
-        if st.button(f"Like Post {p['post_id']}"):
+        if st.button( "Like Post"):
             # Increment likes by 1
             supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("post_id", p["post_id"]).execute()
             st.rerun()  # Refresh to show updated likes
