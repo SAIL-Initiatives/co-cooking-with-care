@@ -28,7 +28,7 @@ tabs= st.tabs(['Share', 'Users'] )
 
 with tabs[1]:
     # --- Display users ---
-    response = supabase.table("Users").select("*").order("created_at", desc=True).execute()
+    response = supabase.table("Profiles").select("*").order("created_at", desc=True).execute()
     users = response.data
     
     if users:
@@ -116,7 +116,7 @@ if choice == "Signup":
         user = response.user
         if user:
             # Insert into Users table (UUID-based RLS)
-            supabase.table("Users").insert({
+            supabase.table("Profiles").insert({
                 "id": user.id,
                 "email": email,
                 "display_name": display_name
