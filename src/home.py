@@ -28,7 +28,7 @@ tabs= st.tabs(['Share', 'Users'] )
 
 with tabs[1]:
     # --- Display users ---
-    response = supabase.table("Profiles").select("*").order("created_at", desc=True).execute()
+    response = supabase.table("userprofiles").select("*").order("created_at", desc=True).execute()
     users = response.data
     
     if users:
@@ -40,7 +40,7 @@ with tabs[1]:
             
 with tabs[0]:
     # --- Display posts ---
-    response = supabase.table("Posts").select("*").order("created_at", desc=True).execute()
+    response = supabase.table("posts").select("*").order("created_at", desc=True).execute()
     posts = response.data
     
     if posts:
@@ -89,7 +89,7 @@ with tabs[0]:
             post_id = str(uuid.uuid4())  # generate random UUID
               
             # Insert record
-            supabase.table("Posts").insert(
+            supabase.table("posts").insert(
                 {
                     "post_id": post_id,
                     "content": content, 
@@ -115,11 +115,14 @@ if choice == "Signup":
     if st.sidebar.button("Signup"):
         response = supabase.auth.sign_up({"email": email, "password": password})
         user = response.user
+        if user.id:
+            st.write( user.id)
+        else:
+            uid = str(uuid.uuid4()) 
         if user:
             # Insert into Users table (UUID-based RLS)
-            supabase.table("Profiles").insert({
-                "id": user.id,
-                "email": email,
+            supabase.table("userprofiles").insert({
+                "id": uid,
                 "display_name": display_name
             }).execute()
             st.success("Signup successful! Please log in.")
