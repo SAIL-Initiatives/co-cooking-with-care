@@ -135,6 +135,7 @@ elif choice == "Login":
         user = response.user
         if user:
             st.session_state.user = user
+            st.write(f"Logged in as {user.email}")
             st.success(f"Logged in as {user.email}")
         else:
             st.error("Login failed")
