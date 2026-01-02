@@ -28,59 +28,40 @@ with tabs[1]:
     # -----------------------
     # SIGNUP
     # -----------------------
-    st.subheader("Sign Up")
-    with st.form("signup_form"):
-        email = st.text_input("Email")
-        password = st.text_input("Password", type="password")
-        display_name = st.text_input("Display Name")
-        submit_signup = st.form_submit_button("Sign Up")
-    
-        if submit_signup:
-            # 1️⃣ Sign up with Supabase Auth
+    login_tabs = st.tabs(["Sign Up", "Log in", "Log out"])
+    with login_tabs[0]:
+        email = st.sidebar.text_input("Email")
+        password = st.sidebar.text_input("Password", type="password")
+        display_name = st.sidebar.text_input("Display Name")
+        if st.sidebar.button("Signup"):
             response = supabase.auth.sign_up({"email": email, "password": password})
             user = response.user
-    
             if user:
-                st.success("Signup successful! Check your email to confirm.")
-    
-                # 2️⃣ Insert into User table
-                supabase.table("Users").insert({  # same UUID as auth
+                # Insert into Users table (UUID-based RLS)
+                supabase.table("Users").insert({
+                    "id": user['id'],
                     "email": email,
                     "display_name": display_name
                 }).execute()
+                st.success("Signup successful! Please log in.")
+                
+    with login_tabs[1]:
+        email = st.sidebar.text_input("Email")
+        password = st.sidebar.text_input("Password", type="password")
+        if st.sidebar.button("Login"):
+            response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+            user = response.user
+            if user:
+                st.session_state.user = user
+                st.success(f"Logged in as {user['email']}")
             else:
-                st.error(f"Error: {response.get('error', 'Unknown error')}")
+                st.error("Login failed")
     
-    # -----------------------
-    # LOGIN
-    # -----------------------
-    st.subheader("Login")
-    with st.form("login_form"):
-        email_login = st.text_input("Email", key="email_login")
-        password_login = st.text_input("Password", type="password", key="password_login")
-        submit_login = st.form_submit_button("Login")
-    
-        if submit_login:
-            response = supabase.auth.sign_in_with_password({
-                "email": email_login,
-                "password": password_login
-            })
-            if response.user:
-                st.session_state.user = response.user
-                st.success(f"Logged in as {response.user['email']}")
-            else:
-                st.error("Login failed. Check email/password.")
-    
-    # -----------------------
-    # LOGOUT
-    # -----------------------
-    if st.session_state.user:
-        st.write(f"Hello, {st.session_state.user['email']}")
-        if st.button("Logout"):
+    with login_tabs[2]::
+        if st.sidebar.button("Logout"):
             supabase.auth.sign_out()
             st.session_state.user = None
-            st.rerun()
-
+            st.success("Logged out!")      
 
 with tabs[0]:
     st.subheader("Add a Post")
