@@ -12,9 +12,9 @@ st.write( now )
 
 # Supabase credentials
 SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"
-
+SUPABASE_KEY = os.enviro['SUPABASE_KEY']  # YOUR_ANON_KEY
 SUPABASE_URL = "https://krpvkkctdsqrfwthvndz.supabase.co"
-SUPABASE_KEY = "sb_publishable_OQiidfTH2UMDKCwmDs6p7Q_Inzs0Z2D" # YOUR_ANON_KEY
+
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
