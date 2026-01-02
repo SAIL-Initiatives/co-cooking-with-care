@@ -124,7 +124,7 @@ with tabs[1]: #st.sidebar.header("Signup / Login")
         email = st.text_input("Email")
         password = st.text_input("Password", type="password")
         display_name = st.text_input("Display Name")
-        if st.sidebar.button("Signup"):
+        if st.button("Signup"):
             response = supabase.auth.sign_up({"email": email, "password": password})
             user = response.user
             st.text( f'User ID: {user.id}' ) 
@@ -141,7 +141,7 @@ with tabs[1]: #st.sidebar.header("Signup / Login")
     elif choice == "Login":
         email = st.text_input("Email")
         password = st.text_input("Password", type="password")
-        if st.sidebar.button("Login"):
+        if st.button("Login"):
             response = supabase.auth.sign_in_with_password({"email": email, "password": password})
             user = response.user
             if user:
