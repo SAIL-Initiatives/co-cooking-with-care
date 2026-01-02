@@ -99,6 +99,7 @@ with tabs[0]:
                 }
             ).execute()
             st.success("Post added successfully!")
+            st.rerun()
     
     
     
