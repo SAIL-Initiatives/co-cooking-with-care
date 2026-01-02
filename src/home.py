@@ -64,7 +64,7 @@ if posts:
         if st.button(f"Like Post {p['id']}"):
             # Increment likes by 1
             supabase.table("Posts").update({"likes": p["likes"] + 1}).eq("id", p["id"]).execute()
-            st.experimental_rerun()  # Refresh to show updated likes
+            st.rerun()  # Refresh to show updated likes
         st.markdown("---")
  
 else:
