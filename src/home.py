@@ -116,7 +116,7 @@ if choice == "Signup":
         response = supabase.auth.sign_up({"email": email, "password": password})
         user = response.user
         if user.id:
-            st.write( user.id)
+            st.write( uid:= user.id)
         else:
             uid = str(uuid.uuid4()) 
         if user:
