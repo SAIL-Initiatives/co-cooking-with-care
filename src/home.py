@@ -172,5 +172,5 @@ with tabs[2]:
             st.html( f'<hr/>Last login at {timestamp} by {p['id']} <hr/>' )
             
 st.html('<hr/>')
-st.write( f'System's time: {now}' )
+st.write( f'System''s time: {now}' )
 st.write( 'URL: https://sail-initiatives-mvp.share.connect.posit.cloud' )
