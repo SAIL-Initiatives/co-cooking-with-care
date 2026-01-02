@@ -11,23 +11,26 @@ now = datetime.now()
 st.write( now )
 
 # Supabase credentials
-SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"
+# SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"
+SUPABASE_URL = os.environ['SUPABASE_URL']   
 SUPABASE_KEY = os.environ['SUPABASE_KEY']  # YOUR_ANON_KEY
-SUPABASE_URL = "https://krpvkkctdsqrfwthvndz.supabase.co"
-
-
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 st.title("Cherish Chef")
 
-
 # --- Form to add a post ---
 st.subheader("Add a Post")
 with st.form("add_post"):
-    user_id_input = st.text_input(
-        "User ID (optional, leave blank for random UUID)"
-    )
+    user_id_input = ""
     content = st.text_area("Tell us your story")
+
+    user_name = st.text_input(
+        "Your name (optional)"
+    )
+    
+    sharable  = st.checkbox("If someone shares your story again, they must mention your name.")
+    st.markdown("We believe your story belongs to you. If others share it, they should be encouraged to mention you.")
+    st.markdown()
     
     submitted = st.form_submit_button("Submit")
 
@@ -40,7 +43,8 @@ with st.form("add_post"):
         supabase.table("Posts").insert(
             {
                 "user_id": user_id_input,
-                "content": content,
+                "content": content, 
+                "sharable": sharable,
                 "likes": 0,
             }
         ).execute()
