@@ -87,8 +87,8 @@ with tabs[0]:
     with st.form("add_post"):
         content = st.text_area("Please tell us your story")
     
-        user_name = st.text_input(
-            "Your name (optional)"
+        display_name = st.text_input(
+            "Your display name"
         )
         
         sharable  = st.checkbox("If someone shares your story again, they must mention your name.")
@@ -107,7 +107,7 @@ with tabs[0]:
                     "post_id": post_id,
                     "content": content, 
                     "sharable": sharable,
-                    "user_name": user_name,
+                    "display_name": display_name,
                     "likes": 0,
                 }
             ).execute()
