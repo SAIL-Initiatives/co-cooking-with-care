@@ -169,8 +169,8 @@ with tabs[2]:
             timestamp = p['created_at']
             dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
             timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
-            st.html( f'<hr/>Last login at {timestamp} by {p['display_name']} <hr/>' )
+            st.html( f'<hr/>Last account signup by {p['display_name']} at {timestamp}<hr/>' )
             
 st.html('<hr/>')
-st.write( f"System''s time: {now}" )
+st.write( f"System's time: {now}" )
 st.write( 'URL: https://sail-initiatives-mvp.share.connect.posit.cloud' )
