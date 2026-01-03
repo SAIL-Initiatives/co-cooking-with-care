@@ -6,26 +6,38 @@ from datetime import datetime
 
 import uuid, json
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup 
 
-def fetch_link_preview(url: str):
+def fetch_link_preview(url):
     headers = {
-        "User-Agent": "Mozilla/5.0"
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        ),
+        "Accept-Language": "en-US,en;q=0.9",
     }
-    res = requests.get(url, headers=headers, timeout=5)
+
+    res = requests.get(
+        url,
+        headers=headers,
+        timeout=8,
+        allow_redirects=True
+    )
+
     soup = BeautifulSoup(res.text, "html.parser")
 
-    def og(name):
-        tag = soup.find("meta", property=f"og:{name}")
+    def meta(prop):
+        tag = soup.find("meta", property=prop)
         return tag["content"] if tag else None
-    
+
     return {
-        "url": url,
-        "title": og("title"),
-        "description": og("description"),
-        "image_url": og("image"),
+        "final_url": res.url,
+        "title": meta("og:title"),
+        "description": meta("og:description"),
+        "image": meta("og:image"),
     }
-                
+
 now = datetime.now()    
 
 
