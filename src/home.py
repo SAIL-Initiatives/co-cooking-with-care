@@ -113,7 +113,8 @@ with tabs[0]:
     
     if st.button("Preview"):
         preview = fetch_link_preview(url)
-    
+
+        st.write( preview )
         st.subheader(preview["title"])
         st.write(preview["description"])
     
@@ -136,9 +137,9 @@ with tabs[0]:
             "Your display name"
         )
         
-        sharable = st.checkbox("If someone shares your story again, they must mention your name.")
+        sharable = st.checkbox("If someone shares your story, they should* credit you (for example, by mentioning your name). Check this box if you’d like to remain anonymous instead.")
         sharable = int( sharable )
-        st.html("<p>We believe your story belongs to you. If others share it, they should be encouraged to mention you.</p>")
+        st.html("<p>*We believe your story belongs to you. If others share it, they should be encouraged to mention you.</p>")
         
         submitted = st.form_submit_button("Submit")
     
