@@ -151,7 +151,7 @@ with tabs[0]:
         
         sharable = st.checkbox("If someone shares your story, they should* credit you (for example, by mentioning your name). Check this box if you’d like to remain anonymous instead.")
         sharable = int( sharable )
-        st.html("<p>*We believe your story belongs to you. If others share it, they should be encouraged to mention you.</p>")
+        st.html("<p>*We believe your story belongs to you. If others reshare it, they should credit the original author whenever possible.</p>")
         
         submitted = st.form_submit_button("Submit")
     
