@@ -5,7 +5,27 @@ import numpy as np;
 from datetime import datetime
 
 import uuid, json
+import requests
+from bs4 import BeautifulSoup
 
+def fetch_link_preview(url: str):
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
+    res = requests.get(url, headers=headers, timeout=5)
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    def og(name):
+        tag = soup.find("meta", property=f"og:{name}")
+        return tag["content"] if tag else None
+    
+    return {
+        "url": url,
+        "title": og("title"),
+        "description": og("description"),
+        "image_url": og("image"),
+    }
+                
 now = datetime.now()    
 
 
@@ -74,6 +94,9 @@ with tabs[0]:
                 st.html("Shared with care. Please mention the author whenever you repost it." )
             n=p['likes']
             st.markdown( f"**{n} Likes**")
+
+            
+       
             
             # Like button
             if st.button( "Like Post", key=p['post_id']+'_like_button' ):
@@ -85,8 +108,28 @@ with tabs[0]:
         st.info("No posts yet.")
     
     st.divider()
+
+    url = st.text_input("Paste a link (Quora, Medium, etc.)")
+    
+    if st.button("Preview"):
+        preview = fetch_link_preview(url)
+    
+        st.subheader(preview["title"])
+        st.write(preview["description"])
+    
+        if preview["image_url"]:
+            st.image(preview["image_url"], width=400)
+    
+        if 0: #st.button("Save link"):
+            user = supabase.auth.get_user()
+            supabase.table("external_links").insert({
+                "user_id": user.data.user.id,
+                **preview
+            }).execute()    
+            st.success("Link saved!")
+            
     st.subheader("Add a Post")
-    with st.form("add_post"):
+    with st.form("add_post"):        
         content = st.text_area("Please tell us your story")
     
         display_name = st.text_input(
