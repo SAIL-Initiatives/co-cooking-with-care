@@ -10,7 +10,10 @@ import uuid, json, base64
 import requests
 from bs4 import BeautifulSoup 
 
-
+if st.session_state["user"]:
+    user = st.session_state["user"] = 
+    
+        
 def process_images(html, supabase):
     img_pattern = r'<img src="data:image/(png|jpeg);base64,([^"]+)"'
     matches = re.findall(img_pattern, html)
@@ -195,6 +198,7 @@ with tabs[0]:
                     "post_id": post_id,
                     "content": content, 
                     "sharable": sharable,
+                    "user_id": st.session_state["user"].id,
                     "display_name": display_name,
                     "likes": 0,
                 }
@@ -217,6 +221,8 @@ with tabs[1]: #st.sidebar.header("Signup / Login")
             st.text( f'User ID: {user.id}' ) 
             
             if user:
+                st.write( user ) 
+                
                 # Insert into Users table (UUID-based RLS)
                 supabase.table("userprofiles").insert({
                     "id": user.id,
