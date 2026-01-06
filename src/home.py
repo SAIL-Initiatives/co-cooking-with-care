@@ -211,45 +211,48 @@ with tabs[0]:
 with tabs[1]: #st.sidebar.header("Signup / Login")
 
     choice = st.radio("Choose", ["Login", "Signup", "Logout"])
-    
-    if choice == "Signup":
-        email = st.text_input("Email")
-        password = st.text_input("Password", type="password")
-        display_name = st.text_input("Display Name")
-        if st.button("Signup"):
-            response = supabase.auth.sign_up({"email": email, "password": password})
-            user = response.user
-            st.text( f'User ID: {user.id}' ) 
-            
-            if user:
-                st.write( user ) 
+
+    if "user" in st.session_state:
+        if choice == "Logout":
+                if st.button("Logout"):
+                    supabase.auth.sign_out()
+                    st.session_state.user = None
+                    st.success("Logged out!")        
+    else:
+        if choice == "Signup":
+            email = st.text_input("Email")
+            password = st.text_input("Password", type="password")
+            display_name = st.text_input("Display Name")
+            if st.button("Signup"):
+                response = supabase.auth.sign_up({"email": email, "password": password})
+                user = response.user
+                st.text( f'User ID: {user.id}' ) 
                 
-                # Insert into Users table (UUID-based RLS)
-                supabase.table("userprofiles").insert({
-                    "id": user.id,
-                    "email": email,
-                    "display_name": display_name
-                }).execute()
-                st.success("Signup successful! Please log in.")
-                
-    elif choice == "Login":
-        email = st.text_input("Email")
-        password = st.text_input("Password", type="password")
-        if st.button("Login"):
-            response = supabase.auth.sign_in_with_password({"email": email, "password": password})
-            user = response.user
-            if user:
-                st.session_state.user = user
-                st.write(f"Logged in as {user.email}")
-                st.success(f"Logged in as {user.email}")
-            else:
-                st.error("Login failed")
-    
-    elif choice == "Logout":
-        if st.button("Logout"):
-            supabase.auth.sign_out()
-            st.session_state.user = None
-            st.success("Logged out!")
+                if user:
+                    st.write( user ) 
+                    
+                    # Insert into Users table (UUID-based RLS)
+                    supabase.table("userprofiles").insert({
+                        "id": user.id,
+                        "email": email,
+                        "display_name": display_name
+                    }).execute()
+                    st.success("Signup successful! Please log in.")
+                    
+        elif choice == "Login":
+            email = st.text_input("Email")
+            password = st.text_input("Password", type="password")
+            if st.button("Login"):
+                response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+                user = response.user
+                if user:
+                    st.session_state.user = user
+                    st.write(f"Logged in as {user.email}")
+                    st.success(f"Logged in as {user.email}")
+                else:
+                    st.error("Login failed")
+        
+        
 
 
 
