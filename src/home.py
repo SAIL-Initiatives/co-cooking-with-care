@@ -4,7 +4,8 @@ import os
 import numpy as np; 
 from datetime import datetime
 from streamlit_quill import st_quill
-
+st_autorefresh = st.experimental_get_query_params 
+from streamlit_autorefresh import st_autorefresh
 
 import uuid, json, base64
 import requests
@@ -215,7 +216,9 @@ with tabs[1]: #st.sidebar.header("Signup / Login")
         if st.button("Logout"):
             supabase.auth.sign_out()
             st.session_state.user = None
-            st.success("Logged out!")        
+            st.success("Logged out!")     
+            
+            st_autorefresh(interval=3000, key="idle_refresh")    
     else:
         choice = st.radio("Choose", ["Login", "Signup"])
         if choice == "Signup":
