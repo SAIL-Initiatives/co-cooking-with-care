@@ -4,7 +4,7 @@ import os
 import numpy as np; 
 from datetime import datetime
 from streamlit_quill import st_quill
-st_autorefresh = st.experimental_get_query_params 
+
 from streamlit_autorefresh import st_autorefresh
 
 import uuid, json, base64
