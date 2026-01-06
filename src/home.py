@@ -82,7 +82,7 @@ st.title("Cherish Chef")
 if "user" not in st.session_state:
     st.session_state.user = None
 
-tabs= st.tabs(['Share', 'Signup', 'System history', 'Terms of services' ] )
+tabs= st.tabs(['Share', 'Signup to join/host a cooking event', 'System history', 'Terms of services' ] )
 
 if 0:
     '''
@@ -213,7 +213,7 @@ with tabs[1]: #st.sidebar.header("Signup / Login")
     
 
     if "user" in st.session_state:
-        st.writ( user ) 
+        st.write( user ) 
         if st.button("Logout"):
             supabase.auth.sign_out()
             st.session_state.user = None
