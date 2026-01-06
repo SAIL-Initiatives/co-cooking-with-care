@@ -76,9 +76,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 st.title("Cherish Chef")
 
-# Session tracking
-if "user" not in st.session_state:
-    st.session_state.user = None
+
 
 tabs= st.tabs(['Share', 'Signup to join/host a cooking event', 'System history', 'Terms of services' ] )
 
@@ -208,12 +206,12 @@ with tabs[0]:
     
 with tabs[1]: #st.sidebar.header("Signup / Login")
 
-    if ("user" in st.session_state) & ( st.session_state['user'] is not None):
+    if ("user" in st.session_state):
         user = st.session_state['user']
         st.write( user ) 
         if st.button("Logout"):
             supabase.auth.sign_out()
-            st.session_state.user = None
+            del st.session_state["user"] 
             st.success("Logged out!")     
             
             st_autorefresh(interval=3000, key="idle_refresh")    
