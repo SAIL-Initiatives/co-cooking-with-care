@@ -11,7 +11,7 @@ import requests
 from bs4 import BeautifulSoup 
 
 if st.session_state["user"]:
-    user = st.session_state["user"] = 
+    user = st.session_state["user"]
     
         
 def process_images(html, supabase):
