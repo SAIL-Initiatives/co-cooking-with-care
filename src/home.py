@@ -3,10 +3,35 @@ from supabase import create_client
 import os
 import numpy as np; 
 from datetime import datetime
+from streamlit_quill import st_quill
 
-import uuid, json
+
+import uuid, json, base64
 import requests
 from bs4 import BeautifulSoup 
+
+
+def process_images(html, supabase):
+    img_pattern = r'<img src="data:image/(png|jpeg);base64,([^"]+)"'
+    matches = re.findall(img_pattern, html)
+
+    for img_type, img_data in matches:
+        img_bytes = base64.b64decode(img_data)
+        filename = f"editor/{uuid.uuid4()}.{img_type}"
+
+        supabase.storage.from_("uploads").upload(
+            filename,
+            img_bytes,
+            file_options={"content-type": f"image/{img_type}"}
+        )
+
+        public_url = supabase.storage.from_("uploads").get_public_url(filename)
+        html = html.replace(
+            f"data:image/{img_type};base64,{img_data}",
+            public_url
+        )
+    return html
+
 
 def fetch_link_preview(url):
     headers = {
@@ -121,9 +146,9 @@ with tabs[0]:
     
     st.divider()
 
-    url = st.text_input("Paste a link (Quora, Medium, etc.)")
+    # url = st.text_input("Paste a link (Quora, Medium, etc.)")
     
-    if st.button("Preview"):
+    if 0:# st.button("Preview"):
         preview = fetch_link_preview(url)
 
         st.write( preview )
@@ -143,11 +168,17 @@ with tabs[0]:
             
     st.subheader("Add a Post")
     with st.form("add_post"):        
-        content = st.text_area("Please tell us your story")
-    
+        # content = st.text_area("Please tell us your story")
+
+        content = st_quill(
+            placeholder="Paste text or images here...",
+            html=True
+        )
+
         display_name = st.text_input(
             "Your display name"
         )
+
         
         sharable = st.checkbox("If someone shares your story, they should* credit you (for example, by mentioning your name). Check this box if you’d like to remain anonymous instead.")
         sharable = int( sharable )
