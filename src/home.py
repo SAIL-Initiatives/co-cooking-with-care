@@ -10,7 +10,7 @@ import uuid, json, base64
 import requests
 from bs4 import BeautifulSoup 
 
-if st.session_state["user"]:
+if "user" in st.session_state:
     user = st.session_state["user"]
     
         
