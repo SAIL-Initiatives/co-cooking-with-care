@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 
 if "user" in st.session_state:
     user = st.session_state["user"]
+    st.write(user)
     
         
 def process_images(html, supabase):
