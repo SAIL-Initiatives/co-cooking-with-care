@@ -210,15 +210,16 @@ with tabs[0]:
     
 with tabs[1]: #st.sidebar.header("Signup / Login")
 
-    choice = st.radio("Choose", ["Login", "Signup", "Logout"])
+    
 
     if "user" in st.session_state:
-        if choice == "Logout":
-                if st.button("Logout"):
-                    supabase.auth.sign_out()
-                    st.session_state.user = None
-                    st.success("Logged out!")        
+        st.writ( user ) 
+        if st.button("Logout"):
+            supabase.auth.sign_out()
+            st.session_state.user = None
+            st.success("Logged out!")        
     else:
+        choice = st.radio("Choose", ["Login", "Signup"])
         if choice == "Signup":
             email = st.text_input("Email")
             password = st.text_input("Password", type="password")
