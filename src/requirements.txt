@@ -1,4 +1,5 @@
 streamlit
 supabase
 python-dotenv
+streamlit-quill
 bs4
