@@ -3,3 +3,4 @@ supabase
 python-dotenv
 streamlit-quill
 bs4
+streamlit_autorefresh
