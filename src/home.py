@@ -208,9 +208,7 @@ with tabs[0]:
     
 with tabs[1]: #st.sidebar.header("Signup / Login")
 
-    
-
-    if "user" in st.session_state:
+    if ("user" in st.session_state) & ( st.session_state['user'] is not None):
         user = st.session_state['user']
         st.write( user ) 
         if st.button("Logout"):
