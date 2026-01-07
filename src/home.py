@@ -11,7 +11,7 @@ import uuid, json, base64
 import requests
 from bs4 import BeautifulSoup 
 
-with open('static/style.css') as f:
+with open('../static/style.css') as f:
     css = f.read()
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
         
