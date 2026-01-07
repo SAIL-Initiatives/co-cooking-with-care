@@ -141,7 +141,7 @@ with tabs[0]:
                     "post_id": post_id,
                     "content": content, 
                     "sharable": sharable,
-                    "email": st.session_state["user"].identity_data['email],
+                    "email": st.session_state["user"].identity_data['email'],
                     "display_name": display_name,
                     "likes": 0,
                 }
