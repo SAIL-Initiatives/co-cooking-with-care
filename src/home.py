@@ -11,7 +11,9 @@ import uuid, json, base64
 import requests
 from bs4 import BeautifulSoup 
 
-    
+with open('static/style.css') as f:
+    css = f.read()
+st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
         
 def process_images(html, supabase):
     img_pattern = r'<img src="data:image/(png|jpeg);base64,([^"]+)"'
@@ -92,8 +94,10 @@ with tabs[0]:
             dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
     
             timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
-            #**ID:** {p['post_id']}             
+                        
             st.markdown(f"**Created:** {timestamp} | **Author's name:** {p['display_name']}")
+
+            p["content"] = p["content"].replace( '<img' , "<img class='thumbnail'")
             st.html( '<hr>'+ p["content"] + '<hr>' )
             if p['sharable']: 
                 st.html("Shared with care. Please mention the author whenever you repost it." )
