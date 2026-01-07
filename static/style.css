@@ -1,0 +1,9 @@
+
+body {
+    background-color: #f0f2f6;
+}
+
+img.thumbnail {
+  width: 10em;
+  height: auto; 
+}
