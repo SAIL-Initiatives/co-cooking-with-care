@@ -74,42 +74,11 @@ SUPABASE_URL = os.environ['SUPABASE_URL']
 SUPABASE_KEY = os.environ['SUPABASE_KEY']  # YOUR_ANON_KEY
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-st.title("Cherish Chef")
+st.title("[name for the MVP]")
 
 
 
 tabs= st.tabs(['Share', 'Signup to join/host a cooking event', 'System history', 'Terms of services' ] )
-
-if 0:
-    '''
-    id='44da6b55-f712-4cd1-8d18-b49beeb0457b' 
-    app_metadata={'provider': 'email', 'providers': ['email']} 
-    user_metadata={'email': '1470pancake@gmail.com', 'email_verified': False, 
-    'phone_verified': False, 'sub': '44da6b55-f712-4cd1-8d18-b49beeb0457b'}
-    
-    aud='authenticated' 
-    confirmation_sent_at=datetime.datetime(2026, 1, 2, 7, 26, 23, 473154, tzinfo=TzInfo(0)) 
-    recovery_sent_at=None email_change_sent_at=None new_email=None new_phone=None 
-    invited_at=None action_link=None email='1470pancake@gmail.com' phone='' 
-    
-    created_at=datetime.datetime(2026, 1, 2, 7, 26, 23, 458624, tzinfo=TzInfo(0)) 
-    confirmed_at=None email_confirmed_at=None phone_confirmed_at=None last_sign_in_at=None 
-    role='authenticated' updated_at=datetime.datetime(2026, 1, 2, 7, 26, 24, 634023, tzinfo=TzInfo(0)) 
-    identities=[UserIdentity(id='44da6b55-f712-4cd1-8d18-b49beeb0457b', 
-    identity_id='e6cf7f9d-e6db-4db5-9c19-ba558a28f93d', 
-    user_id='44da6b55-f712-4cd1-8d18-b49beeb0457b',
-    
-    identity_data={'email': '1470pancake@gmail.com', 'email_verified': False, 
-    'phone_verified': False, 'sub': '44da6b55-f712-4cd1-8d18-b49beeb0457b'}, 
-    provider='email', created_at=datetime.datetime(2026, 1, 2, 7, 26, 23, 469418, tzinfo=TzInfo(0)), 
-    last_sign_in_at=datetime.datetime(2026, 1, 2, 7, 26, 23, 469366, tzinfo=TzInfo(0)), 
-    updated_at=datetime.datetime(2026, 1, 2, 7, 26, 23, 469418, tzinfo=TzInfo(0)))] 
-    is_anonymous=False 
-    factors=None
-    
-    
-    44da6b55-f712-4cd1-8d18-b49beeb0457b
-    '''
 
 with tabs[0]:
     # --- Display posts ---
@@ -123,18 +92,13 @@ with tabs[0]:
             dt = datetime.fromisoformat( timestamp.replace("Z", "+00:00") )
     
             timestamp = dt.strftime("%b %d, %Y • %I:%M %p")
-            #**ID:** {p['post_id']} 
-            
+            #**ID:** {p['post_id']}             
             st.markdown(f"**Created:** {timestamp} | **Author's name:** {p['display_name']}")
             st.html( '<hr>'+ p["content"] + '<hr>' )
             if p['sharable']: 
                 st.html("Shared with care. Please mention the author whenever you repost it." )
             n=p['likes']
-            st.markdown( f"**{n} Likes**")
-
-            
-       
-            
+            st.markdown( f"**{n} Likes**")            
             # Like button
             if st.button( "Like Post", key=p['post_id']+'_like_button' ):
                 # Increment likes by 1
@@ -147,25 +111,7 @@ with tabs[0]:
     st.divider()
 
     # url = st.text_input("Paste a link (Quora, Medium, etc.)")
-    
-    if 0:# st.button("Preview"):
-        preview = fetch_link_preview(url)
-
-        st.write( preview )
-        st.subheader(preview["title"])
-        st.write(preview["description"])
-    
-        if preview["image_url"]:
-            st.image(preview["image_url"], width=400)
-    
-        if 0: #st.button("Save link"):
-            user = supabase.auth.get_user()
-            supabase.table("external_links").insert({
-                "user_id": user.data.user.id,
-                **preview
-            }).execute()    
-            st.success("Link saved!")
-            
+                
     st.subheader("Add a Post")
     with st.form("add_post"):        
         # content = st.text_area("Please tell us your story")
@@ -195,7 +141,7 @@ with tabs[0]:
                     "post_id": post_id,
                     "content": content, 
                     "sharable": sharable,
-                    "user_id": st.session_state["user"].id,
+                    "email": st.session_state["user"].identity_data['email],
                     "display_name": display_name,
                     "likes": 0,
                 }
