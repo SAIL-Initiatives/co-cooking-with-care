@@ -137,7 +137,7 @@ with tabs[0]:
 
             email = ''
             if 'user' in st.session_state:
-                email = st.session_state["user"].identity_data['email']
+                email = st.session_state["user"].email  
                 
             # Insert record
             supabase.table("posts").insert(
