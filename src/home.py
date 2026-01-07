@@ -134,14 +134,18 @@ with tabs[0]:
     
         if submitted:            
             post_id = str(uuid.uuid4())  # generate random UUID
-              
+
+            email = ''
+            if 'user' in st.session_state:
+                email = st.session_state["user"].identity_data['email']
+                
             # Insert record
             supabase.table("posts").insert(
                 {
                     "post_id": post_id,
                     "content": content, 
                     "sharable": sharable,
-                    "email": st.session_state["user"].identity_data['email'],
+                    "email": email,
                     "display_name": display_name,
                     "likes": 0,
                 }
