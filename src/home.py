@@ -77,7 +77,7 @@ SUPABASE_KEY = os.environ['SUPABASE_KEY']  # YOUR_ANON_KEY
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 st.title("Kullaj is ready!")
-st.markdown('This is the Kullaj table, a virtual space for sharing recipes, stories, and heritage')
+st.markdown('Welcome to the <i>Kullaj table</i>, a virtual space where we share recipes, stories, and heritage')
 
 
 tabs= st.tabs(['Share', 'Signup to join/host a cooking event', 'System history', 'Terms of services' ] )
